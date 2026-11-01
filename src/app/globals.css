@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+ * SHORE NAILS — SOFTER, CALMER LUXURY COLOR PALETTE & ENHANCED TYPOGRAPHY
+ * ------------------------------------------------------------------
+ * Exact requested palette:
+ * - Main background: #EEE9E2
+ * - Secondary background: #E5DDD3
+ * - Card background: #F1ECE5
+ * - Muted blush: #C5AAA6
+ * - Dusty rose: #AD918E
+ * - Main text: #403832
+ * - Secondary text: #74675F
+ * - Borders: #D4C9BD
+ * - Accent: #A58D76
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-ivory: #EEE9E2;
+  --color-sand: #E5DDD3;
+  --color-cream: #F1ECE5;
+  --color-blush: #C5AAA6;
+  --color-blush-soft: #EAE3DE;
+  --color-rose: #AD918E;
+  --color-brown: #403832;
+  --color-taupe: #74675F;
+  --color-taupe-light: #9B8E85;
+  --color-beige: #D4C9BD;
+  --color-beige-dark: #C4B8AB;
+  --color-champagne: #A58D76;
+  --color-champagne-light: #BAA48F;
+  --color-gold: #A58D76;
+
+  /* Semantic typography mappings for high contrast and calm readability */
+  --color-ink: #403832;
+  --color-ink-soft: #5C524A;
+  --color-ink-muted: #74675F;
+
+  --font-serif: var(--font-cormorant), "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-jost), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-zoom-in: zoom-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slow-zoom: slow-zoom 20s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes zoom-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.05);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-ivory font-sans text-ink antialiased selection:bg-blush selection:text-brown text-[16px] sm:text-[17.5px] leading-relaxed;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-champagne);
+    outline-offset: 3px;
+  }
+}
+
+/* Reusable luxury layout & typography utilities */
+@utility container-lux {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+}
+
+@utility eyebrow {
+  @apply inline-flex items-center gap-2.5 text-[0.8rem] sm:text-[0.85rem] font-semibold tracking-[0.24em] text-taupe uppercase;
+
+  &::before {
+    content: "";
+    @apply h-px w-6 bg-champagne/80;
+  }
+}
+
+/* Main hero heading: 52–64px desktop, 34–38px mobile */
+@utility heading-xl {
+  @apply font-serif text-[2.25rem] sm:text-[3rem] lg:text-[3.45rem] xl:text-[3.9rem] leading-[1.12] font-normal tracking-[-0.01em] text-brown;
+}
+
+/* Section headings: 36–44px desktop, 28–32px mobile */
+@utility heading-lg {
+  @apply font-serif text-[1.95rem] sm:text-[2.3rem] lg:text-[2.65rem] leading-[1.18] font-normal tracking-[-0.01em] text-brown;
+}
+
+/* Subsection headings: 22–26px */
+@utility heading-md {
+  @apply font-serif text-[1.45rem] sm:text-[1.75rem] leading-[1.22] font-normal text-brown;
+}
+
+/* Refined, touch-friendly buttons with larger text and subtle shadow */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-[0.88rem] sm:text-[0.94rem] font-medium tracking-[0.12em] uppercase transition-all duration-300 ease-out;
+}
+
+@utility btn-primary {
+  @apply btn bg-brown text-cream border border-brown hover:bg-champagne hover:border-champagne hover:text-brown shadow-xs hover:shadow-sm;
+}
+
+@utility btn-outline {
+  @apply btn border border-brown/30 text-brown hover:border-champagne hover:bg-cream hover:text-champagne;
+}
+
+@utility btn-champagne {
+  @apply btn bg-champagne text-cream border border-champagne hover:bg-brown hover:border-brown hover:text-cream shadow-xs;
+}
+
+@utility link-underline {
+  @apply relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-0 after:bg-champagne after:transition-transform after:duration-300 hover:after:origin-left hover:after:scale-x-100;
+}
+
+/* Subtle card styling */
+@utility luxury-card {
+  @apply rounded-2xl border border-beige bg-cream p-6 sm:p-8 transition-all duration-300 hover:border-champagne hover:bg-cream hover:shadow-sm;
+}
+
+/* Scroll-reveal helper */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
