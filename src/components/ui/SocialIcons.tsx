@@ -7,6 +7,8 @@ import type { SVGProps } from "react";
 export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      width={24}
+      height={24}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -26,6 +28,8 @@ export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
 export function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      width={24}
+      height={24}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
