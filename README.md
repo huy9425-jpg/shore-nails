@@ -56,7 +56,37 @@ Constructed using pure CSS typography (no cliparts, icons, illustrations, or bot
 
 ---
 
-## 4. Running the Website Locally
+## 4. Customer Review System & Admin Dashboard (`/admin`)
+
+The Shore Nails website includes a privacy-preserving customer review submission and moderation system backed by **Supabase** and **Supabase Auth**.
+
+### Database Migration
+Run the SQL migration file in your **Supabase Dashboard &rarr; SQL Editor**:
+- [`supabase/migrations/20261102000000_create_reviews_system.sql`](supabase/migrations/20261102000000_create_reviews_system.sql)
+
+This migration creates:
+1. `public.reviews` table with validation constraints, automatic `updated_at` trigger, and `moderation_status` (`pending`, `approved`, `rejected`, `hidden`).
+2. Strict Row Level Security (RLS) policies ensuring public visitors can only submit `pending` reviews with explicit publication consent (`consent_to_publish = true`).
+3. `public.public_approved_reviews` view exposing only `id`, `customer_name`, `rating`, `review_text`, and `created_at` for `approved` reviews (`contact_email` and `contact_phone` are never exposed publicly).
+4. Supabase Realtime publication on `public.reviews` for live admin dashboard updates.
+
+### Required Environment Variables
+Create a `.env.local` file locally (see [`.env.example`](.env.example)) and add the same variables in **Vercel &rarr; Project Settings &rarr; Environment Variables**:
+
+- `NEXT_PUBLIC_SUPABASE_URL` — Your Supabase Project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Your Supabase Publishable / Anon Key
+- `SUPABASE_SERVICE_ROLE_KEY` — *(Optional / Recommended)* Server-only Service Role Key
+- `ADMIN_ALLOWED_EMAILS` — *(Optional)* Comma-separated list of authorized administrator emails
+
+### Creating the First Administrator Account
+1. Open your **Supabase Dashboard &rarr; Authentication &rarr; Providers &rarr; Email** and disable **"Allow new users to sign up"** so only accounts you create can log in.
+2. Go to **Authentication &rarr; Users &rarr; Add User &rarr; Create New User**.
+3. Enter the salon owner's email address and strong password, check **"Auto Confirm User"**, and click **Create User**.
+4. Open `/admin` on the website, sign in with that email and password, and manage all customer reviews (`APPROVE`, `REJECT`, `HIDE`, `DELETE`).
+
+---
+
+## 5. Running the Website Locally
 
 ### Development Server:
 ```bash

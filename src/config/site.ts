@@ -58,9 +58,23 @@ export const siteConfig = {
     embedMapUrl:
       "https://maps.google.com/maps?q=512+New+Road,+Northfield,+NJ+08225&t=&z=15&ie=UTF8&iwloc=&output=embed",
 
+    /** Local timezone for Shore Nails in Northfield, NJ */
+    timezone: "America/New_York",
+
+    /** Official 7-day business opening hours */
+    openingHours: [
+      { day: "Monday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Tuesday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Wednesday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Thursday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Friday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Saturday", hours: "8:00 AM – 8:00 PM", openHour: 8, openMinute: 0, closeHour: 20, closeMinute: 0 },
+      { day: "Sunday", hours: "8:00 AM – 6:00 PM", openHour: 8, openMinute: 0, closeHour: 18, closeMinute: 0 },
+    ],
+
     /** Note regarding opening hours */
     hoursNotice:
-      "Please call us at (609) 407-0072 for current hours and walk-in availability.",
+      "Open 7 days a week. Walk-ins welcome or call (609) 407-0072 for inquiries.",
   },
 
   /** Official Social Media */

@@ -5,6 +5,7 @@ import { Services } from "@/components/sections/Services";
 import { Prices } from "@/components/sections/Prices";
 import { Gallery } from "@/components/sections/Gallery";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
+import { CustomerReviews } from "@/components/sections/CustomerReviews";
 import { LocationMap } from "@/components/sections/LocationMap";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/layout/Footer";
@@ -20,6 +21,7 @@ export default function Home() {
         <Prices />
         <Gallery />
         <WhyChooseUs />
+        <CustomerReviews />
         <LocationMap />
         <Contact />
       </main>

@@ -61,9 +61,8 @@ export const priceList: PriceCategory[] = [
       "Relaxing foot soaks, exfoliation, cuticle grooming, and rejuvenating massage treatments.",
     items: [
       {
-        name: "Luxury Spa Pedicure",
+        name: "Luxury Spa Pedicure (Approximately 45 Minutes)",
         price: "$65",
-        note: "Approximately 45 Minutes",
       },
       { name: "Deluxe Pedicure", price: "$55" },
       { name: "Regular Pedicure", price: "$38" },
@@ -95,8 +94,8 @@ export const priceList: PriceCategory[] = [
     description:
       "Essential grooming treatments tailored for clean, healthy nails and relaxing foot care.",
     items: [
-      { name: "Sport Manicure", price: "$15" },
-      { name: "Sport Pedicure", price: "$35" },
+      { name: "Sport Manicure", price: "$20" },
+      { name: "Sport Pedicure", price: "$38" },
       { name: "Back Waxing", price: "$70+" },
     ],
   },

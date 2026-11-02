@@ -80,6 +80,27 @@ const jsonLd = {
     addressCountry: "US",
   },
   hasMap: siteConfig.contact.googleMapsUrl,
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
+      opens: "08:00",
+      closes: "20:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Sunday"],
+      opens: "08:00",
+      closes: "18:00",
+    },
+  ],
   sameAs: [
     siteConfig.social.facebook.url,
     siteConfig.social.instagram.url,

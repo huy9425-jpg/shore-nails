@@ -1,10 +1,11 @@
 "use client";
 
-import { Phone, MapPin, ArrowUp } from "lucide-react";
+import { Phone, MapPin, ArrowUp, Clock } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { navLinks } from "@/data/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
+import { OpenStatusBadge } from "@/components/ui/OpenStatusBadge";
 
 export function Footer() {
   const currentYear = 2026;
@@ -12,9 +13,9 @@ export function Footer() {
   return (
     <footer className="relative bg-brown text-cream/90 border-t-2 border-champagne">
       <div className="container-lux pt-16 pb-12 sm:pt-20 sm:pb-14">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand Col */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-4">
             <a href="#home" aria-label="SHORE NAILS — return to top">
               <Logo variant="light" />
             </a>
@@ -46,7 +47,7 @@ export function Footer() {
           </div>
 
           {/* Quick Nav */}
-          <div className="lg:col-span-3 lg:col-start-7">
+          <div className="lg:col-span-2">
             <p className="text-[0.78rem] font-semibold tracking-[0.24em] text-champagne-light uppercase">
               Navigation
             </p>
@@ -65,7 +66,7 @@ export function Footer() {
           </div>
 
           {/* Location & Phone */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-3">
             <p className="text-[0.78rem] font-semibold tracking-[0.24em] text-champagne-light uppercase">
               Visit Shore Nails
             </p>
@@ -91,6 +92,28 @@ export function Footer() {
                 {siteConfig.contact.hoursNotice}
               </p>
             </div>
+          </div>
+
+          {/* Opening Hours */}
+          <div className="lg:col-span-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="flex items-center gap-2 text-[0.78rem] font-semibold tracking-[0.24em] text-champagne-light uppercase">
+                <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span>OPENING HOURS</span>
+              </p>
+              <OpenStatusBadge variant="dark" />
+            </div>
+            <dl className="mt-4 space-y-1.5 text-xs sm:text-sm text-cream/85">
+              {siteConfig.contact.openingHours.map((entry) => (
+                <div
+                  key={entry.day}
+                  className="flex items-center justify-between gap-2 border-b border-cream/10 pb-1.5 last:border-b-0"
+                >
+                  <dt className="font-medium text-cream/90">{entry.day}</dt>
+                  <dd className="text-cream/75 tabular-nums">{entry.hours}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
+import { OpenStatusBadge } from "@/components/ui/OpenStatusBadge";
 
 export function Contact() {
   return (
@@ -90,26 +91,41 @@ export function Contact() {
             </div>
           </Reveal>
 
-          {/* Contact Card 3: Social & Availability */}
+          {/* Contact Card 3: Opening Hours & Social */}
           <Reveal delay={160}>
             <div className="flex h-full flex-col justify-between rounded-2xl border border-beige bg-cream p-7 sm:p-9 shadow-xs hover:border-champagne transition-all">
               <div>
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sand/60 text-champagne border border-beige mb-6">
-                  <Clock className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                </span>
-                <h3 className="font-serif text-[1.48rem] sm:text-[1.68rem] text-brown font-normal">
-                  Hours &amp; Social
-                </h3>
-                <p className="mt-2.5 text-[0.98rem] sm:text-[1.04rem] text-ink-soft leading-relaxed">
-                  {siteConfig.contact.hoursNotice}
-                </p>
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sand/60 text-champagne border border-beige">
+                    <Clock className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  <OpenStatusBadge variant="light" />
+                </div>
 
-                <div className="mt-5 space-y-3">
+                <h3 className="font-serif text-[1.35rem] sm:text-[1.5rem] tracking-[0.08em] text-brown font-normal uppercase">
+                  OPENING HOURS
+                </h3>
+
+                <dl className="mt-4 divide-y divide-beige/70 border-y border-beige/80 text-[0.92rem] sm:text-[0.96rem]">
+                  {siteConfig.contact.openingHours.map((entry) => (
+                    <div
+                      key={entry.day}
+                      className="flex items-center justify-between py-2 gap-3"
+                    >
+                      <dt className="font-medium text-brown">{entry.day}</dt>
+                      <dd className="text-ink-soft font-normal tabular-nums">
+                        {entry.hours}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="mt-5 space-y-2.5">
                   <a
                     href={siteConfig.social.instagram.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-beige bg-sand/40 text-brown hover:border-champagne hover:bg-cream transition-colors text-sm font-medium"
+                    className="flex items-center justify-between p-3 rounded-xl border border-beige bg-sand/40 text-brown hover:border-champagne hover:bg-cream transition-colors text-sm font-medium"
                     aria-label={`Follow Shore Nails on Instagram (${siteConfig.social.instagram.handle})`}
                   >
                     <span className="flex items-center gap-3">
@@ -123,7 +139,7 @@ export function Contact() {
                     href={siteConfig.social.facebook.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-beige bg-sand/40 text-brown hover:border-champagne hover:bg-cream transition-colors text-sm font-medium"
+                    className="flex items-center justify-between p-3 rounded-xl border border-beige bg-sand/40 text-brown hover:border-champagne hover:bg-cream transition-colors text-sm font-medium"
                     aria-label={`Visit Shore Nails on Facebook (${siteConfig.social.facebook.name})`}
                   >
                     <span className="flex items-center gap-3">
@@ -135,7 +151,7 @@ export function Contact() {
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-beige">
+              <div className="mt-6 pt-5 border-t border-beige">
                 <a
                   href={`tel:${siteConfig.contact.phoneLink}`}
                   className="btn-champagne w-full justify-center !py-3.5 text-[0.86rem]"
