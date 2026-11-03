@@ -10,9 +10,11 @@
  */
 
 export interface PriceItem {
+  id?: string;
   name: string;
   price: string;
   note?: string;
+  duration?: string;
   isUnconfirmed?: boolean;
 }
 

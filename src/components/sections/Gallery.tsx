@@ -6,16 +6,14 @@ import { ChevronLeft, ChevronRight, Expand, Grid, X } from "lucide-react";
 import {
   galleryCategories,
   galleryItems,
-  type GalleryCategory,
-  type GalleryItem,
 } from "@/data/gallery";
+import type { PublicGalleryItem, PublicGalleryResponse } from "@/lib/gallery/types";
 import { siteConfig } from "@/config/site";
 import { InstagramIcon } from "@/components/ui/SocialIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-type Filter = "All" | GalleryCategory;
-const filters: Filter[] = ["All", ...galleryCategories];
+type Filter = "All" | string;
 
 /**
  * 6 curated highlight IDs displayed initially on the homepage
@@ -31,26 +29,85 @@ const HOMEPAGE_FEATURED_IDS = [
 ] as const;
 
 export function Gallery() {
+  const [items, setItems] = useState<PublicGalleryItem[]>(() =>
+    galleryItems.map((item) => ({
+      id: item.id,
+      src: item.src,
+      alt: item.alt,
+      title: item.title,
+      category: item.category,
+      width: item.width,
+      height: item.height,
+      author: item.author,
+      license: item.license,
+      isCustom: false,
+    })),
+  );
+  const [categories, setCategories] = useState<string[]>(() =>
+    Array.from(galleryCategories),
+  );
+  const filters: Filter[] = useMemo(() => ["All", ...categories], [categories]);
+
   const [isExpandedOpen, setIsExpandedOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<Filter>("All");
   const [lightboxState, setLightboxState] = useState<{
-    items: GalleryItem[];
+    items: PublicGalleryItem[];
     index: number;
   } | null>(null);
 
-  const featuredItems = useMemo(() => {
-    const selected = HOMEPAGE_FEATURED_IDS.map((id) =>
-      galleryItems.find((item) => item.id === id),
-    ).filter((item): item is GalleryItem => Boolean(item));
-    return selected.length === 6 ? selected : galleryItems.slice(0, 6);
+  useEffect(() => {
+    let mounted = true;
+
+    fetch("/api/gallery", {
+      method: "GET",
+      cache: "no-store",
+    })
+      .then((res) => (res.ok ? (res.json() as Promise<PublicGalleryResponse>) : null))
+      .then((data) => {
+        if (!mounted || !data) return;
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          setItems(data.items);
+        }
+        if (Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(data.categories);
+        }
+      })
+      .catch(() => {
+        // Fallback silently to static gallery items
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
+
+  const featuredItems = useMemo(() => {
+    const customItems = items.filter((item) => item.isCustom);
+    if (customItems.length > 0) {
+      const topCustom = customItems.slice(0, 2);
+      const remainingSlots = 6 - topCustom.length;
+      const staticSelected = HOMEPAGE_FEATURED_IDS.map((id) =>
+        items.find((item) => item.id === id),
+      )
+        .filter((item): item is PublicGalleryItem => Boolean(item))
+        .slice(0, remainingSlots);
+
+      return [...topCustom, ...staticSelected];
+    }
+
+    const selected = HOMEPAGE_FEATURED_IDS.map((id) =>
+      items.find((item) => item.id === id),
+    ).filter((item): item is PublicGalleryItem => Boolean(item));
+
+    return selected.length === 6 ? selected : items.slice(0, 6);
+  }, [items]);
 
   const filteredModalItems = useMemo(
     () =>
       activeFilter === "All"
-        ? galleryItems
-        : galleryItems.filter((item) => item.category === activeFilter),
-    [activeFilter],
+        ? items
+        : items.filter((item) => item.category === activeFilter),
+    [items, activeFilter],
   );
 
   // Lock background page scroll when full gallery modal is open
@@ -166,7 +223,7 @@ export function Gallery() {
             <Grid className="h-4 w-4" aria-hidden="true" />
             <span>VIEW ALL DESIGNS</span>
             <span className="ml-1 rounded-full bg-cream/20 px-2.5 py-0.5 text-[0.74rem] font-normal tracking-wider">
-              {galleryItems.length}
+              {items.length}
             </span>
           </button>
 
@@ -196,7 +253,7 @@ export function Gallery() {
             <div className="container-lux py-4 sm:py-5 flex items-center justify-between gap-4">
               <div>
                 <p className="text-[0.72rem] font-semibold tracking-[0.22em] text-taupe uppercase">
-                  Shore Nails Portfolio &bull; {filteredModalItems.length} of {galleryItems.length} Designs
+                  Shore Nails Portfolio &bull; {filteredModalItems.length} of {items.length} Designs
                 </p>
                 <h3
                   id="expanded-gallery-title"
@@ -340,7 +397,7 @@ export function Gallery() {
 }
 
 interface LightboxProps {
-  items: GalleryItem[];
+  items: PublicGalleryItem[];
   index: number;
   onChange: (index: number) => void;
   onClose: () => void;
@@ -460,7 +517,10 @@ function Lightbox({ items, index, onChange, onClose }: LightboxProps) {
             {item.title}
           </p>
           <p className="mt-1.5 text-xs text-cream/70">
-            Image {index + 1} of {items.length} &bull; Photo by {item.author} ({item.license})
+            Image {index + 1} of {items.length} &bull;{" "}
+            {item.author
+              ? `Photo by ${item.author} (${item.license})`
+              : "Shore Nails Client Portfolio"}
           </p>
         </figcaption>
       </figure>

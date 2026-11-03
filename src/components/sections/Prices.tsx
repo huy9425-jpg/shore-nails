@@ -1,19 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Phone, Info } from "lucide-react";
-import { priceList, unlistedPriceNotice } from "@/data/prices";
+import { priceList, unlistedPriceNotice, type PriceCategory } from "@/data/prices";
+import type { PublicPricingResponse } from "@/lib/pricing/types";
 import { siteConfig } from "@/config/site";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function Prices() {
+  const [categories, setCategories] = useState<PriceCategory[]>(() => priceList);
   const [activeTab, setActiveTab] = useState<string>("all");
+
+  useEffect(() => {
+    let mounted = true;
+
+    fetch("/api/prices", {
+      method: "GET",
+      cache: "no-store",
+    })
+      .then((res) => (res.ok ? (res.json() as Promise<PublicPricingResponse>) : null))
+      .then((data) => {
+        if (!mounted || !data) return;
+        if (Array.isArray(data.categories) && data.categories.length > 0) {
+          setCategories(data.categories);
+        }
+      })
+      .catch(() => {
+        // Fallback silently to static priceList
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const filteredCategories =
     activeTab === "all"
-      ? priceList
-      : priceList.filter((cat) => cat.id === activeTab);
+      ? categories
+      : categories.filter((cat) => cat.id === activeTab);
 
   return (
     <section
@@ -53,7 +78,7 @@ export function Prices() {
             >
               All Services
             </button>
-            {priceList.map((cat) => {
+            {categories.map((cat) => {
               const isActive = activeTab === cat.id;
               return (
                 <button
@@ -115,6 +140,11 @@ export function Prices() {
                         <span className="text-[1.08rem] sm:text-[1.16rem] font-medium text-brown">
                           {item.name}
                         </span>
+                        {item.duration && (
+                          <span className="block text-xs sm:text-sm text-taupe mt-0.5">
+                            {item.duration}
+                          </span>
+                        )}
                         {item.note && (
                           <span className="block text-xs sm:text-sm text-taupe italic mt-0.5">
                             {item.note}

@@ -8,13 +8,16 @@ import {
   Check,
   Clock,
   EyeOff,
+  Images,
   Lock,
   LogOut,
   Mail,
+  MessageSquare,
   Phone,
   RefreshCw,
   ShieldCheck,
   Star,
+  DollarSign,
   Trash2,
   X,
 } from "lucide-react";
@@ -29,6 +32,8 @@ import type {
   ModerationStatus,
 } from "@/lib/reviews/types";
 import { Logo } from "@/components/ui/Logo";
+import { GalleryManager } from "@/components/admin/GalleryManager";
+import { PricingManager } from "@/components/admin/PricingManager";
 
 type FilterTab = "all" | "pending" | "approved" | "rejected" | "hidden";
 
@@ -115,6 +120,7 @@ export function AdminDashboard() {
   const [loadingReviews, setLoadingReviews] = useState<boolean>(false);
   const [dashboardError, setDashboardError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [adminSection, setAdminSection] = useState<"reviews" | "gallery" | "pricing">("reviews");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AdminReview | null>(null);
   const [realtimeConnected, setRealtimeConnected] = useState<boolean>(false);
@@ -532,10 +538,63 @@ export function AdminDashboard() {
             </form>
           </div>
         ) : (
-          /* Authenticated Review Management Dashboard */
+          /* Authenticated Admin Dashboard */
           <div>
-            {/* Dashboard Title & Refresh Controls */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Section Switcher Tabs: Customer Reviews & Gallery Management */}
+            <div className="flex flex-wrap items-center gap-3 border-b border-beige pb-6 mb-8">
+              <button
+                type="button"
+                onClick={() => setAdminSection("reviews")}
+                className={`inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                  adminSection === "reviews"
+                    ? "bg-brown text-cream shadow-xs"
+                    : "border border-beige bg-cream text-brown hover:border-champagne hover:text-champagne"
+                }`}
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>Customer Reviews</span>
+                {summary.pendingCount > 0 && (
+                  <span className="rounded-full bg-amber-600 text-white px-2 py-0.5 text-[0.68rem] font-bold">
+                    {summary.pendingCount}
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAdminSection("gallery")}
+                className={`inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                  adminSection === "gallery"
+                    ? "bg-brown text-cream shadow-xs"
+                    : "border border-beige bg-cream text-brown hover:border-champagne hover:text-champagne"
+                }`}
+              >
+                <Images className="h-4 w-4" />
+                <span>Gallery Management</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAdminSection("pricing")}
+                className={`inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                  adminSection === "pricing"
+                    ? "bg-brown text-cream shadow-xs"
+                    : "border border-beige bg-cream text-brown hover:border-champagne hover:text-champagne"
+                }`}
+              >
+                <DollarSign className="h-4 w-4" />
+                <span>Pricing Management</span>
+              </button>
+            </div>
+
+            {adminSection === "gallery" ? (
+              <GalleryManager sessionToken={sessionToken!} />
+            ) : adminSection === "pricing" ? (
+              <PricingManager sessionToken={sessionToken!} />
+            ) : (
+              <div>
+                {/* Dashboard Title & Refresh Controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2.5">
                   <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-brown font-normal">
@@ -861,6 +920,8 @@ export function AdminDashboard() {
                 })
               )}
             </div>
+              </div>
+            )}
           </div>
         )}
       </main>
