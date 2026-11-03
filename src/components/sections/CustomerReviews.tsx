@@ -68,7 +68,12 @@ export function CustomerReviews() {
   const [averageRating, setAverageRating] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return window.location.hash === "#write-review";
+    }
+    return false;
+  });
   const [customerName, setCustomerName] = useState<string>("");
   const [contactEmail, setContactEmail] = useState<string>("");
   const [contactPhone, setContactPhone] = useState<string>("");
@@ -116,6 +121,81 @@ export function CustomerReviews() {
 
     return () => {
       mounted = false;
+    };
+  }, []);
+
+  // Auto-scroll to #reviews when accessed directly (e.g., via QR code or direct link)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const hash = window.location.hash;
+    const isTarget = hash === "#reviews" || hash === "#write-review";
+
+    const scrollToReviews = (behavior: ScrollBehavior) => {
+      const el = document.getElementById("reviews");
+      if (!el) return;
+      el.scrollIntoView({ behavior, block: "start" });
+    };
+
+    if (isTarget) {
+      // Initial scroll attempt
+      scrollToReviews("auto");
+
+      let userInteracted = false;
+      const markInteracted = () => {
+        userInteracted = true;
+      };
+      window.addEventListener("wheel", markInteracted, { passive: true, once: true });
+      window.addEventListener("touchmove", markInteracted, { passive: true, once: true });
+
+      const attemptScroll = (behavior: ScrollBehavior) => {
+        if (!userInteracted) {
+          scrollToReviews(behavior);
+        }
+      };
+
+      // Handle post-hydration and image layout stabilization
+      const t1 = setTimeout(() => attemptScroll("smooth"), 150);
+      const t2 = setTimeout(() => attemptScroll("smooth"), 500);
+
+      const onLoad = () => attemptScroll("smooth");
+      if (document.readyState !== "complete") {
+        window.addEventListener("load", onLoad, { once: true });
+      }
+
+      const onHashChange = () => {
+        const curHash = window.location.hash;
+        if (curHash === "#reviews" || curHash === "#write-review") {
+          scrollToReviews("smooth");
+          if (curHash === "#write-review") {
+            setIsFormOpen(true);
+          }
+        }
+      };
+      window.addEventListener("hashchange", onHashChange);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        window.removeEventListener("load", onLoad);
+        window.removeEventListener("wheel", markInteracted);
+        window.removeEventListener("touchmove", markInteracted);
+        window.removeEventListener("hashchange", onHashChange);
+      };
+    }
+
+    const onHashChange = () => {
+      const curHash = window.location.hash;
+      if (curHash === "#reviews" || curHash === "#write-review") {
+        scrollToReviews("smooth");
+        if (curHash === "#write-review") {
+          setIsFormOpen(true);
+        }
+      }
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
     };
   }, []);
 
@@ -215,7 +295,7 @@ export function CustomerReviews() {
     <section
       id="reviews"
       aria-labelledby="reviews-heading"
-      className="relative bg-ivory py-20 sm:py-28 lg:py-32 border-t border-beige"
+      className="relative bg-ivory py-20 sm:py-28 lg:py-32 border-t border-beige scroll-mt-24 sm:scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-lux">
         <SectionHeading
@@ -509,7 +589,7 @@ export function CustomerReviews() {
                         placeholder="you@example.com"
                         value={contactEmail}
                         onChange={(e) => setContactEmail(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-beige bg-cream px-3.5 py-2.5 text-sm text-brown placeholder:text-taupe-light focus:border-champagne focus:outline-hidden"
+                        className="mt-1 w-full rounded-xl border border-beige bg-cream px-3.5 py-2.5 text-base sm:text-sm text-brown placeholder:text-taupe-light focus:border-champagne focus:outline-hidden"
                       />
                     </div>
 
@@ -527,7 +607,7 @@ export function CustomerReviews() {
                         placeholder="(609) 555-0123"
                         value={contactPhone}
                         onChange={(e) => setContactPhone(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-beige bg-cream px-3.5 py-2.5 text-sm text-brown placeholder:text-taupe-light focus:border-champagne focus:outline-hidden"
+                        className="mt-1 w-full rounded-xl border border-beige bg-cream px-3.5 py-2.5 text-base sm:text-sm text-brown placeholder:text-taupe-light focus:border-champagne focus:outline-hidden"
                       />
                     </div>
                   </div>
