@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     images: [images.hero.src],
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: "qXzob8B03_mThI8Jrk8UQtAN6oXsfMyaXGL7qSjWQX8",
+  },
 };
 
 export const viewport: Viewport = {
